@@ -1,12 +1,12 @@
-# products
+# Products
 These are products I have for sale or used to have for sale that are now free (donations accepted)
 
-Export Image to Multiple Sizes for Photoshop
+Export Image to Multiple Sizes for Photoshop  
 Export to Multiple Sizes is a script for Photoshop to export your work to multiple sizes. When creating icons for mobile or desktop applications you must export your application icon to over twenty five different sizes. Now you can choose a target platform (or create your own sizes list) and export them all at once!
 
 &nbsp;
 
-[embed]https://www.youtube.com/watch?v=_la4ErHBJ5o&feature=youtu.be[/embed]
+https://www.youtube.com/watch?v=_la4ErHBJ5o
 
 <strong><a href="https://www.velara3.com/wp/wp-content/uploads/2015/01/Screen-Shot-2015-01-31-at-6.10.27-PM.png"><img class="alignright size-full wp-image-524" src="https://www.velara3.com/wp/wp-content/uploads/2015/01/Screen-Shot-2015-01-31-at-6.10.27-PM.png" alt="Export to custom sizes" width="245" height="268" /></a>Features</strong>
 * Easy to use
