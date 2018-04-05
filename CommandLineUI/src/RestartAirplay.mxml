@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					   xmlns:s="library://ns.adobe.com/flex/spark" 
+					   xmlns:mx="library://ns.adobe.com/flex/mx"
+					   xmlns="http://ns.adobe.com/textLayout/2008"
+					   xmlns:nativeProcess="com.flexcapacitor.effects.nativeProcess.*" 
+					   xmlns:handlers="com.flexcapacitor.handlers.*" 
+					   xmlns:status="com.flexcapacitor.effects.status.*" 
+					   xmlns:email="com.flexcapacitor.effects.email.*" 
+					   xmlns:controls="com.flexcapacitor.controls.*" 
+					   xmlns:window="com.flexcapacitor.effects.window.*" 
+					   xmlns:core="com.flexcapacitor.effects.core.*" 
+					   xmlns:utils="com.flexcapacitor.utils.*" 
+					   
+					   height="625" xmlns:navigation="com.flexcapacitor.effects.navigation.*"
+					   >
+	
+	
+	<!---
+	
+	This application is used to fix AIRPlay by reseting the audio 
+	
+	-->
+	
+	<fx:Script>
+		<![CDATA[
+			import flashx.textLayout.events.FlowElementMouseEvent;
+			protected function runProcess_standardErrorDataHandler(event:ProgressEvent):void {
+				var data:String = runProcess.errorData;
+				
+				// RestartAIRPlay.scpt:73:114: execution error: sudo: no tty present and no askpass program specified (1)
+				// RestartAIRPlay.scpt:227:263: execution error: No matching processes belonging to you were found (1)
+				if (data && data.indexOf("-1719")!=-1) {
+					errorLabel.visible = true;
+				}
+				else {
+					errorLabel.visible = false;
+				}
+			}
+			
+			protected function runProcess_standardOutputDataHandler(event:ProgressEvent):void {
+				//trace('StandardOutput:' + runProcess.outputData);
+				var output:String = runProcess.outputData as String;
+				
+				if (output.indexOf("-1")!=-1) {
+					reportError("Error");
+				}
+				
+			}
+			
+			protected function runProcess_standardErrorIOErrorHandler(event:IOErrorEvent):void {
+				//trace('Error IO Error:' + event.toString())
+				var output:String = event.toString();
+				
+				reportError(output);
+			}
+			
+			protected function runProcess_standardOutputIOErrorHandler(event:IOErrorEvent):void {
+				//trace('Output IO Error:' + event.toString());
+				var output:String = event.toString();
+				
+				reportError(output);
+			}
+			
+			/**
+			 * Reset the UI and show an error message
+			 * */
+			public function reportError(output:String):void {
+				/*errorLabel.text = output;
+				runButton.text = "Show Desktop";
+				closingApplicationEffect.stop();
+				cancelButton.text = ""*/;
+			}
+			
+			protected function runProcess_exitHandler(event:NativeProcessExitEvent):void {
+				//trace('Process exited with: ' + event.exitCode);
+			}
+			
+			private function handleClickEvent(e:FlowElementMouseEvent):void {
+                var url:String;
+				openPrivacyPreferences.play();
+			}
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Center window -->
+		<handlers:EventHandler eventName="creationComplete" description="Center Window" >
+			<window:CenterWindow offsetY="0" target="{this}"/>	
+		</handlers:EventHandler>
+		
+		<!-- Run process -->
+		<handlers:EventHandler target="{runButton}" eventName="click" description="Run Process">
+			<nativeProcess:RunProcess id="runProcess"
+									  startDelay="60"
+									  repeatCount="1" repeatDelay="500"
+									  executablePath="/usr/bin/osascript"
+									  arguments="RestartAIRPlay.scpt"
+									  standardOutputData	="runProcess_standardOutputDataHandler(event)"
+									  standardErrorData		="runProcess_standardErrorDataHandler(event)"
+									  standardErrorIOError	="runProcess_standardErrorIOErrorHandler(event)"
+									  standardOutputIOError	="runProcess_standardOutputIOErrorHandler(event)"
+									  exit					="runProcess_exitHandler(event)">
+				<nativeProcess:notSupportedEffect>
+					<status:ShowStatusMessage message="Native process not supported"/>
+				</nativeProcess:notSupportedEffect>
+				<nativeProcess:processNotFoundEffect>
+					<status:ShowStatusMessage message="Process not found"/>
+				</nativeProcess:processNotFoundEffect>
+				<nativeProcess:processFoundEffect>
+					<s:Sequence>
+						<!--<core:SetAction target="{this}" value="30" property="nativeWindow" subProperty="x"/>-->
+						<!--<core:SetAction target="{runButton}" startDelay="1000" value="Restarting AIR Play" property="label"/>-->
+						<!--<core:SetAction target="{runButton}" startDelay="3000" value="Restart AIR Play" property="label"/>-->
+					</s:Sequence>
+					<!--<status:ShowStatusMessage message="Process found"/>-->
+				</nativeProcess:processFoundEffect>
+			</nativeProcess:RunProcess>
+			
+		</handlers:EventHandler>
+		
+		<!-- Open privacy preferences -->
+		<handlers:EventHandler target="{openPrivacyButton}" eventName="click" description="Open Preferences">
+			<nativeProcess:RunProcess id="openPrivacyPreferences"
+										  repeatCount="1"
+										  executablePath="/usr/bin/osascript"
+										  arguments="OpenPrivacyPreferences.scpt"
+										  standardOutputData	="runProcess_standardOutputDataHandler(event)"
+										  standardErrorData		="runProcess_standardErrorDataHandler(event)"
+										  standardErrorIOError	="runProcess_standardErrorIOErrorHandler(event)"
+										  standardOutputIOError	="runProcess_standardOutputIOErrorHandler(event)"
+										  exit					="runProcess_exitHandler(event)">
+				<nativeProcess:notSupportedEffect>
+					<status:ShowStatusMessage message="Native process not supported"/>
+				</nativeProcess:notSupportedEffect>
+				<nativeProcess:processNotFoundEffect>
+					<status:ShowStatusMessage message="Process not found"/>
+				</nativeProcess:processNotFoundEffect>
+				<!--<nativeProcess:processFoundEffect>
+					<s:Sequence>
+						<status:ShowStatusMessage message="Open preferences"/>
+					</s:Sequence>
+				</nativeProcess:processFoundEffect>-->
+			</nativeProcess:RunProcess>
+		</handlers:EventHandler>
+		
+		<!-- Open apple tv preferences -->
+		<handlers:EventHandler target="{openAppleTVButton}" eventName="click" description="Open Display Preferences">
+			<nativeProcess:RunProcess id="openAppleTVPreferences"
+										  repeatCount="1"
+										  executablePath="/usr/bin/osascript"
+										  arguments="OpenDisplayPreferences.scpt"
+										  standardOutputData	="runProcess_standardOutputDataHandler(event)"
+										  standardErrorData		="runProcess_standardErrorDataHandler(event)"
+										  standardErrorIOError	="runProcess_standardErrorIOErrorHandler(event)"
+										  standardOutputIOError	="runProcess_standardOutputIOErrorHandler(event)"
+										  exit					="runProcess_exitHandler(event)">
+				<nativeProcess:notSupportedEffect>
+					<status:ShowStatusMessage message="Native process not supported"/>
+				</nativeProcess:notSupportedEffect>
+				<nativeProcess:processNotFoundEffect>
+					<status:ShowStatusMessage message="Process not found"/>
+				</nativeProcess:processNotFoundEffect>
+				<!--<nativeProcess:processFoundEffect>
+					<s:Sequence>
+						<status:ShowStatusMessage message="Open preferences"/>
+					</s:Sequence>
+				</nativeProcess:processFoundEffect>-->
+			</nativeProcess:RunProcess>
+		</handlers:EventHandler>
+		
+		<!-- Send mail -->
+		<handlers:EventHandler target="{contactSupport}" eventName="click" >
+			<!--<core:StopEffect target="{closingApplicationEffect}" />-->
+			<email:OpenMail to="support@velara3.com"
+							subject="Support"
+							data=""/>
+							
+		</handlers:EventHandler>
+		
+		<!-- Open Full Tutorial -->
+		<handlers:EventHandler target="{fullTutorialSupport}" eventName="click" >
+			<!--<core:StopEffect target="{closingApplicationEffect}" />-->
+			<navigation:OpenURL URL="http://www.velara3.com/wp/2015/01/14/fixing-apple-tv/"/>
+		</handlers:EventHandler>
+		
+		<!-- Information description -->
+		<fx:String id="infoDescription">
+			<![CDATA[Please read these instructions completely before proceeding (TLDR; Click button, enter credentials if required, try again.) 
+
+NOTE: Any audio applications (such as iTunes) playing audio will stop playing. They may need to be restarted. To be safe close them before proceeding.
+
+1. Click the Restart AIR Play button above 
+2. You will be prompted to enter your login to restart the core audio process
+3. After entering your login click OK. 
+4. Now try to connect and stream to your remote device again. You may need to restart your video or audio application (ie. iTunes).
+]]>
+		</fx:String>
+		
+		<fx:String id="grantPermissionsText">
+<![CDATA[Note: You may need to grant this application assistive access. To do this:  
+1. Open Preferences. Go to Security and Privacy. Select Accessibility
+2. Click the Unlock pad lock if need be and then select "Restart AIR Play" and select Allow access.
+]]>
+		</fx:String>
+		
+		
+<s:TextFlow id="grantTextFlow" 
+			paddingBottom="2" 
+			paddingLeft="2" 
+			paddingRight="2" 
+			paddingTop="2" 
+			whiteSpaceCollapse="collapse" 
+			><s:p><s:span>Note: You may need to grant this application assistive access. To do this:  </s:span></s:p><s:p><s:span>1. Open Preferences. Go to Security and Privacy. Select </s:span><s:a click="handleClickEvent(event)"><s:span>Accessibility</s:span></s:a></s:p><s:p><s:span>2. Select "Restart AIR Play" and select Allow access</s:span></s:p>
+</s:TextFlow>
+		
+<s:TextFlow id="displayTextFlow" 
+			paddingBottom="2" 
+			paddingLeft="2" 
+			paddingRight="2" 
+			paddingTop="2" 
+			whiteSpaceCollapse="collapse" 
+			><s:p><s:a click="handleClickEvent(event)"><s:span>Apple TV display preferences</s:span></s:a></s:p>
+</s:TextFlow>
+		
+		<utils:MiniInspector />
+	</fx:Declarations>
+	
+	<s:VGroup width="100%" left="10" right="10" 
+			  top="16" horizontalAlign="center"
+			  gap="15">
+		
+		
+		<s:Label id="titleLabel" text="Restart AIR Play" fontWeight="bold" fontSize="18"
+									 />
+		<controls:HorizontalLine width="100%"/>
+		
+		<s:HGroup width="100%" horizontalAlign="center" paddingTop="30" paddingBottom="30">
+			<controls:ItemRendererButton id="runButton" 
+										 iconSource="@Embed('/assets/icons/restart_air_play/AIR_Play_icon.png')"
+										 label="Restart AIR Play"
+										 fontWeight="bold" fontSize="14"
+										 />
+		</s:HGroup>
+		
+		<controls:HorizontalLine width="100%"/>
+	
+		<controls:RichDisplayText id="infoLabel" 
+				 text="{infoDescription}" 
+				 horizontalCenter="0" verticalCenter="28" 
+				 fontWeight="normal" 
+				 width="100%" 
+				 textAlign="left" 
+				 paddingRight="16"
+				 paddingLeft="16"
+				 lineHeight="18"
+				 />
+		
+		<controls:HorizontalLine width="100%"/>
+	
+		<s:HGroup width="100%" verticalAlign="top"
+					 paddingRight="16"
+					 paddingLeft="16">
+			<controls:RichDisplayText id="preferencesText" 
+					 textFlow="{grantTextFlow}" 
+					 verticalAlign="top"
+					 fontWeight="normal" 
+					 width="100%" 
+					 textAlign="left" 
+					 lineHeight="18"
+					 
+					 />
+			
+		</s:HGroup>		
+		
+		<controls:HorizontalLine width="100%"/>
+		
+	
+		<s:HGroup width="100%" horizontalAlign="center">
+			<controls:ItemRendererButton id="openAppleTVButton" 
+										 iconSource="@Embed('/assets/icons/restart_air_play/preferences_32.png')"
+										 label="Open AIR Play Preferences"
+										 fontWeight="normal" 
+										 gap="16"
+										 />
+			<s:Spacer width="100%"/>
+			<controls:ItemRendererButton id="openPrivacyButton" 
+										 iconSource="@Embed('/assets/icons/restart_air_play/preferences_32.png')"
+										 label="Open Accessibility Preferences"
+										 fontWeight="normal" 
+										 gap="16"
+										 />
+			
+		</s:HGroup>
+		
+		<s:Label id="errorLabel" 
+				 text="You must grant this application assistive access. Open Preferences > Security and Privacy > Accessibility > Allow access"
+				 color="red"
+				 fontWeight="bold"
+				 width="100%"
+				 visible="false"
+				 textAlign="center"
+				 />
+	</s:VGroup>
+	
+		<s:HGroup width="100%" horizontalAlign="center" bottom="20">
+			<controls:LabelButton id="contactSupport" 
+								  text="Contact Support" 
+								  visible="true"
+								  color="#585858"
+								  />
+			<s:Label text="•"/>
+			<controls:LabelButton id="fullTutorialSupport" 
+								  text="Full Tutorial Here" 
+								   
+								  visible="true"
+								  color="#585858"
+								  />
+		</s:HGroup>
+	
+</s:WindowedApplication>

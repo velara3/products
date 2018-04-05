@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					   xmlns:s="library://ns.adobe.com/flex/spark" 
+					   xmlns:mx="library://ns.adobe.com/flex/mx" 
+					   xmlns:nativeProcess="com.flexcapacitor.effects.nativeProcess.*" 
+					   xmlns:controls="com.flexcapacitor.controls.*">
+	
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			protected function preinitializeHandler(event:FlexEvent):void {
+				//systemManager.topLevelSystemManager.stage.quality = StageQuality.HIGH_16X16_LINEAR;
+				//trace("quality=" + systemManager.topLevelSystemManager.stage.quality);
+			}
+			protected function runProcess_standardOutputDataHandler(event:ProgressEvent):void {
+				trace('StandardOutput:' + runAntProcess.outputData);
+				var output:String = runAntProcess.outputData as String;
+				//trace(`.outputData);
+				
+				if (output && output.indexOf("-1")!=-1) {
+					reportError("Error");
+				}
+				
+				if (output && output.indexOf("{")!=-1) {
+					//var user:Object = JSON.parse(output);
+					
+					//usernameInput.text = user.user;
+					//emailInput.text = user.email;
+				}
+				//trace("output array: "+ getGitUserProcess.outputDataArray);
+				
+			}
+			
+			protected function runProcess_standardErrorDataHandler(event:ProgressEvent):void {
+				var data:String = runAntProcess.errorData;
+				trace('standardErrorData:' + data);
+				// RestartAIRPlay.scpt:73:114: execution error: sudo: no tty present and no askpass program specified (1)
+				// RestartAIRPlay.scpt:227:263: execution error: No matching processes belonging to you were found (1)
+				if (data && data.indexOf("-1719")!=-1) {
+					//errorLabel.visible = true;
+				}
+				else {
+					//errorLabel.visible = false;
+				}
+			}
+			
+			protected function runProcess_standardErrorIOErrorHandler(event:IOErrorEvent):void {
+				trace('Error IO Error:' + event.toString())
+				var output:String = event.toString();
+				
+				reportError(output);
+			}
+			
+			protected function runProcess_standardOutputIOErrorHandler(event:IOErrorEvent):void {
+				trace('Output IO Error:' + event.toString());
+				var output:String = event.toString();
+				
+				reportError(output);
+			}
+			
+			/**
+			 * Reset the UI and show an error message
+			 * */
+			public function reportError(output:String):void {
+				//errorLabel.text = output;
+				trace('Error: ' + output);
+			}
+			
+			protected function runProcess_exitHandler(event:NativeProcessExitEvent):void {
+				trace('Process exited with: ' + event.exitCode);
+			}
+			
+			protected function applicationCompleteHandler(event:FlexEvent):void {
+				//getGitUserProcess.play();
+			}
+			
+			protected function runAntButton_clickHandler(event:MouseEvent):void
+			{
+				runAntProcess.play();
+			}
+			
+			protected function runAntProcess_errorHandler(event:Event):void
+			{
+				trace(runAntProcess.errorEvent);
+				trace(runAntProcess.errorMessage);
+			}
+			
+			/*
+			
+			when only ant was in the directory: 
+			standardErrorData:Error: Could not find or load main class org.apache.tools.ant.launch.Launcher
+			
+			Process exited with: 1
+			*/
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		
+		<nativeProcess:RunProcess id="runAntProcess"
+								  startDelay="60"
+								  repeatCount="1" 
+								  repeatDelay="500"
+								  executablePath		="./assets/Ant/bin/ant"
+								  standardOutputData	="runProcess_standardOutputDataHandler(event)"
+								  standardErrorData		="runProcess_standardErrorDataHandler(event)"
+								  standardErrorIOError	="runProcess_standardErrorIOErrorHandler(event)"
+								  standardOutputIOError	="runProcess_standardOutputIOErrorHandler(event)"
+								  exit					="runProcess_exitHandler(event)"
+								  error					="runAntProcess_errorHandler(event)">
+			
+			<nativeProcess:arguments>
+				<fx:Array>
+					<fx:String>-buildfile</fx:String>
+					<fx:String>TestAnt.xml</fx:String>
+					<fx:String>other</fx:String>
+				</fx:Array>
+			</nativeProcess:arguments>
+		</nativeProcess:RunProcess>
+	</fx:Declarations>
+	
+	<controls:FrameContainer top="10" right="10" bottom="10" left="10">
+		
+		<s:Form id="form1" 
+				width="100%" 
+				fontSize="18"
+				backgroundAlpha="0">
+			<s:layout>
+				<s:FormLayout gap="1"/>
+			</s:layout>
+			<s:FormItem >
+				<s:Button id="runAntButton" 
+						  label="Run ant" 
+						  height="28"
+						  click="runAntButton_clickHandler(event)"
+						  >
+				</s:Button>
+			</s:FormItem>
+		</s:Form>
+	</controls:FrameContainer>
+	
+</s:WindowedApplication>

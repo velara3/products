@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					   xmlns:s="library://ns.adobe.com/flex/spark" 
+					   xmlns:mx="library://ns.adobe.com/flex/mx" 
+					   xmlns:nativeProcess="com.flexcapacitor.effects.nativeProcess.*" 
+					   xmlns:handlers="com.flexcapacitor.handlers.*" 
+					   xmlns:status="com.flexcapacitor.effects.status.*" 
+					   xmlns:application="com.flexcapacitor.effects.application.*"
+					   xmlns:core="com.flexcapacitor.effects.core.*" 
+					   xmlns:debugging="com.flexcapacitor.effects.debugging.*"
+					   xmlns:controls="com.flexcapacitor.controls.*" 
+					   xmlns:email="com.flexcapacitor.effects.email.*" 
+					   
+					   preinitialize="preinitializeHandler(event)"
+					   creationComplete="applicationCompleteHandler(event)" 
+					   >
+	
+	<!---
+	
+	This application is used to start the screen saver
+	
+	-->
+	
+	<fx:Script>
+		<![CDATA[
+			
+			import mx.events.FlexEvent;
+			
+			protected function preinitializeHandler(event:FlexEvent):void {
+				//visible = false;
+				//height = 0; width = 0;
+				startScreenSaver();
+			}
+			
+			protected function applicationCompleteHandler(event:FlexEvent):void {
+				centerWindow();
+			}
+			
+			public function centerWindow():void {
+				nativeWindow.x = (Capabilities.screenResolutionX - nativeWindow.width) / 2;
+				nativeWindow.y = (Capabilities.screenResolutionY - nativeWindow.height) / 2;
+			}
+			
+			public function startScreenSaver():void {
+				runProcess.play();
+			}
+			
+			protected function runProcess_standardOutputDataHandler(event:ProgressEvent):void {
+				//trace('StandardOutput:' + runProcess.outputData);
+				var output:String = runProcess.outputData as String;
+				
+				if (output.indexOf("-1")!=-1) {
+					reportError("If you move the mouse the screen saver will not start.");
+				}
+				
+			}
+			
+			protected function runProcess_standardErrorDataHandler(event:ProgressEvent):void {
+				//trace('Error Data:' + runProcess.errorData);
+				var output:String = runProcess.errorData as String;
+				
+				reportError(output);
+				
+			}
+			
+			protected function runProcess_standardErrorIOErrorHandler(event:IOErrorEvent):void {
+				//trace('Error IO Error:' + event.toString())
+				var output:String = event.toString();
+				
+				reportError(output);
+			}
+			
+			protected function runProcess_standardOutputIOErrorHandler(event:IOErrorEvent):void {
+				//trace('Output IO Error:' + event.toString());
+				var output:String = event.toString();
+				
+				reportError(output);
+			}
+			
+			/**
+			 * Reset the UI and show an error message
+			 * */
+			public function reportError(output:String):void {
+				errorLabel.text = output;
+				runButton.text = "Start Screen Saver";
+				closingApplicationEffect.stop();
+				cancelButton.text = "";
+			}
+			
+			protected function runProcess_exitHandler(event:NativeProcessExitEvent):void {
+				//trace('Process exited with: ' + event.exitCode);
+			}
+			
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- start screen saver -->
+		<handlers:EventHandler target="{runButton}" eventName="click" >
+			<core:SetAction target="{cancelButton}" value="" property="text"/>
+			<core:SetAction target="{errorLabel}" value="" property="text"/>
+			<core:SetAction target="{runButton}" value="Starting Screen Saver" property="text"/>
+			<nativeProcess:RunProcess id="runProcess" 
+									  startDelay="25"
+									  repeatCount="1"
+									  executablePath="/usr/bin/osascript"
+									  arguments="StartScreenSaver.scpt"
+									  standardOutputData	="runProcess_standardOutputDataHandler(event)"
+									  standardErrorData		="runProcess_standardErrorDataHandler(event)"
+									  standardErrorIOError	="runProcess_standardErrorIOErrorHandler(event)"
+									  standardOutputIOError	="runProcess_standardOutputIOErrorHandler(event)"
+									  exit					="runProcess_exitHandler(event)">
+				<nativeProcess:notSupportedEffect>
+					<status:ShowStatusMessage message="Native process not supported"/>
+				</nativeProcess:notSupportedEffect>
+				<nativeProcess:processNotFoundEffect>
+					<status:ShowStatusMessage message="Process not found"/>
+				</nativeProcess:processNotFoundEffect>
+				<nativeProcess:processFoundEffect>
+					<s:Sequence id="closingApplicationEffect">
+						<!--<status:ShowStatusMessage message="Starting the Screen Saver!"/>-->
+						<!--<debugging:Trace message="closing application"/>-->
+						<!--<core:SetAction target="{runButton}" value="" property="text"/>-->
+						<application:CloseApplication startDelay="10000"/>
+					</s:Sequence>
+				</nativeProcess:processFoundEffect>
+			</nativeProcess:RunProcess>
+		</handlers:EventHandler>
+		
+		<!-- Stop screen saver from starting -->
+		<!--<handlers:EventHandler target="{cancelButton}" eventName="click" >
+			<core:StopEffect target="{runProcess}" />
+			<core:StopEffect target="{closingApplicationEffect}" />
+			<core:SetAction target="{cancelButton}" value="Canceled" property="text"/>
+			<core:SetAction target="{runButton}" value="Start Screen Saver" property="text"/>
+		</handlers:EventHandler>-->
+		
+		<!-- Send mail -->
+		<handlers:EventHandler target="{contactSupport}" eventName="click" >
+			<core:StopEffect target="{closingApplicationEffect}" />
+			<email:OpenMail to="support@velara3.com"
+							subject="Support"
+							data=""/>
+		</handlers:EventHandler>
+		
+		<fx:String id="warning">Don't move the mouse after you click the icon. If screen saver doesn't start press the start button.
+		</fx:String>
+	</fx:Declarations>
+	
+	
+	<controls:LabelButton id="runButton" 
+			 text="Starting Screen Saver"
+			 useHandCursor="true"
+			 buttonMode="true"
+			 horizontalCenter="0" verticalCenter="0" 
+			 fontWeight="bold" fontSize="24"/>
+	
+	<s:Label id="cancelButton" 
+			 text="" 
+			 horizontalCenter="0" verticalCenter="28" 
+			 fontWeight="bold" 
+			 useHandCursor="true"
+			 buttonMode="true"
+			 width="100%" 
+			 textAlign="center" 
+			 paddingRight="16"
+			 paddingLeft="16"
+			 />
+	
+	<s:Label id="errorLabel" 
+			 text="" 
+			 color="red" 
+			 horizontalCenter="0" 
+			 verticalCenter="72" 
+			 fontWeight="bold" 
+			 width="100%" 
+			 textAlign="center" 
+			 paddingRight="16"
+			 paddingLeft="16"/>
+	
+	<controls:LabelButton id="contactSupport" 
+						  text="Contact Support" 
+						  horizontalCenter="0" 
+						  bottom="20" 
+						  visible="true"
+						  color="#585858"
+						  />
+	
+</s:WindowedApplication>

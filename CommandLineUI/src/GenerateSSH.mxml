@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					   xmlns:s="library://ns.adobe.com/flex/spark" 
+					   xmlns:mx="library://ns.adobe.com/flex/mx" 
+					   xmlns:controls="com.flexcapacitor.controls.*" 
+					   xmlns:controls1="form.controls.*"
+					   xmlns:utils="com.flexcapacitor.utils.*"
+					   xmlns:nativeProcess="com.flexcapacitor.effects.nativeProcess.*"
+					   
+					   showStatusBar="false"
+					   width="600" height="625" 
+					   preinitialize="preinitializeHandler(event)"
+					   applicationComplete="applicationCompleteHandler(event)"
+					   >
+	
+	<fx:Style>
+		@namespace controls "com.flexcapacitor.controls.*";
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@namespace utils "com.flexcapacitor.utils.*";
+		@namespace mx "library://ns.adobe.com/flex/mx";
+		@namespace controls1 "form.controls.*";
+		@namespace spark "spark.skins.spark.*";
+		
+		spark|FormItemSkin #labelDisplay {
+			/*paddingRight: 50;
+			color: red;*/
+		}
+	</fx:Style>
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			protected function preinitializeHandler(event:FlexEvent):void {
+				//systemManager.topLevelSystemManager.stage.quality = StageQuality.HIGH_16X16_LINEAR;
+				//trace("quality=" + systemManager.topLevelSystemManager.stage.quality);
+			}
+			protected function runProcess_standardOutputDataHandler(event:ProgressEvent):void {
+				trace('StandardOutput:' + getGitUserProcess.outputData);
+				var output:String = getGitUserProcess.outputData as String;
+				//trace(`.outputData);
+				
+				if (output && output.indexOf("-1")!=-1) {
+					reportError("Error");
+				}
+				
+				if (output && output.indexOf("{")!=-1) {
+					var user:Object = JSON.parse(output);
+					
+					usernameInput.text = user.user;
+					emailInput.text = user.email;
+				}
+				//trace("output array: "+ getGitUserProcess.outputDataArray);
+				
+			}
+			
+			protected function runProcess_standardErrorDataHandler(event:ProgressEvent):void {
+				var data:String = getGitUserProcess.errorData;
+				trace('standardErrorData:' + data);
+				// RestartAIRPlay.scpt:73:114: execution error: sudo: no tty present and no askpass program specified (1)
+				// RestartAIRPlay.scpt:227:263: execution error: No matching processes belonging to you were found (1)
+				if (data && data.indexOf("-1719")!=-1) {
+					errorLabel.visible = true;
+				}
+				else {
+					errorLabel.visible = false;
+				}
+			}
+			
+			protected function runProcess_standardErrorIOErrorHandler(event:IOErrorEvent):void {
+				trace('Error IO Error:' + event.toString())
+				var output:String = event.toString();
+				
+				reportError(output);
+			}
+			
+			protected function runProcess_standardOutputIOErrorHandler(event:IOErrorEvent):void {
+				trace('Output IO Error:' + event.toString());
+				var output:String = event.toString();
+				
+				reportError(output);
+			}
+			
+			/**
+			 * Reset the UI and show an error message
+			 * */
+			public function reportError(output:String):void {
+				errorLabel.text = output;
+			}
+			
+			protected function runProcess_exitHandler(event:NativeProcessExitEvent):void {
+				trace('Process exited with: ' + event.exitCode);
+			}
+			
+			protected function applicationCompleteHandler(event:FlexEvent):void {
+				//getGitUserProcess.play();
+			}
+			
+			protected function setGitUserProcess_standardOutputDataHandler(event:ProgressEvent):void {
+				trace('StandardOutput:' + setGitUserProcess.outputData);
+				var output:String = setGitUserProcess.outputData as String;
+				//trace(`.outputData);
+				
+				if (output && output.indexOf("-1")!=-1) {
+					reportError("Error");
+				}
+				
+				if (output && output.indexOf("{")!=-1) {
+					var user:Object = JSON.parse(output);
+					
+					usernameInput.text = user.user;
+					emailInput.text = user.email;
+				}
+			}
+			
+			protected function generateSSHKeyProcess_standardOutputDataHandler(event:ProgressEvent):void {
+				trace('StandardOutput:' + generateSSHKeyProcess.outputData);
+				var output:String = generateSSHKeyProcess.outputData as String;
+				//trace(`.outputData);
+				
+				if (output && output.indexOf("-1")!=-1) {
+					reportError("Error");
+				}
+				
+				if (output && output.indexOf("{")!=-1) {
+					var user:Object = JSON.parse(output);
+					
+					//usernameInput.text = user.user;
+					//emailInput.text = user.email;
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<utils:MiniInspector/>
+		
+		<nativeProcess:RunProcess id="getGitUserProcess"
+									  startDelay="60"
+									  repeatCount="1" repeatDelay="500"
+									  executablePath="/usr/bin/osascript"
+									  arguments="{['GetGlobalGitUser.scpt']}"
+									  standardOutputData	="runProcess_standardOutputDataHandler(event)"
+									  standardErrorData		="runProcess_standardErrorDataHandler(event)"
+									  standardErrorIOError	="runProcess_standardErrorIOErrorHandler(event)"
+									  standardOutputIOError	="runProcess_standardOutputIOErrorHandler(event)"
+									  exit					="runProcess_exitHandler(event)"/>
+		
+		<nativeProcess:RunProcess id="setGitUserProcess"
+									  startDelay="60"
+									  repeatCount="1" repeatDelay="500"
+									  executablePath="/usr/bin/osascript"
+									  arguments="{['SetGlobalGitUser.scpt', usernameInput.text, emailInput.text]}"
+									  standardOutputData	="setGitUserProcess_standardOutputDataHandler(event)"
+									  standardErrorData		="runProcess_standardErrorDataHandler(event)"
+									  standardErrorIOError	="runProcess_standardErrorIOErrorHandler(event)"
+									  standardOutputIOError	="runProcess_standardOutputIOErrorHandler(event)"
+									  exit					="runProcess_exitHandler(event)"/>
+		
+		<nativeProcess:RunProcess id="generateSSHKeyProcess"
+									  startDelay="60"
+									  repeatCount="1" repeatDelay="500"
+									  executablePath="/usr/bin/osascript"
+									  arguments="{['GenerateSSH.scpt', emailInput.text, fileLocation.text, passphraseInput.text]}"
+									  standardOutputData	="generateSSHKeyProcess_standardOutputDataHandler(event)"
+									  standardErrorData		="runProcess_standardErrorDataHandler(event)"
+									  standardErrorIOError	="runProcess_standardErrorIOErrorHandler(event)"
+									  standardOutputIOError	="runProcess_standardOutputIOErrorHandler(event)"
+									  exit					="runProcess_exitHandler(event)"/>
+	</fx:Declarations>
+	
+	<s:BitmapImage source="@Embed('assets/images/paper.jpg')" 
+				   blendMode="normal" alpha=".50"
+				   width="100%" height="100%"
+				   fillMode="repeat"
+				   />
+	
+	<controls:FrameContainer top="10" right="10" bottom="10" left="10">
+	
+		<s:Form id="form1" 
+				width="100%" 
+				fontSize="18"
+				backgroundAlpha="0">
+			<s:layout>
+				<s:FormLayout gap="1"/>
+			</s:layout>
+			<s:FormItem label="User name" >
+				<s:TextInput id="usernameInput" prompt=""/>
+			</s:FormItem>
+			<s:FormItem label="Email" >
+				<s:TextInput id="emailInput" prompt=""/>
+			</s:FormItem>
+			<s:FormItem label="" >
+				<s:Button label="Get Global User" 
+						  height="28"
+						  click="getGitUserProcess.play()" 
+						  />
+				<s:Button label="Set Global User" 
+						  height="28"
+						  click="setGitUserProcess.play()" 
+						  />
+			</s:FormItem>
+			<s:FormItem label="Save to (optional)" >
+				<controls1:FileControl id="fileLocation" showLabel="false" /> 
+			</s:FormItem>
+			<s:FormItem label="Passphrase (optional)" >
+				<s:TextInput id="passphraseInput" prompt=""/> 
+			</s:FormItem>
+			
+			<s:FormItem >
+				<s:Button id="generateSSHKeyButton" 
+						 label="Generate SSH Key" 
+						 height="28"
+						 click="generateSSHKeyProcess.play()"
+						 >
+				</s:Button>
+			</s:FormItem>
+			
+			
+			<controls:HorizontalLine />
+			
+			<s:FormItem label="SSH Key" >
+			</s:FormItem>
+			<controls:RichDisplayText id="SSHKeyTextArea" 
+									  paddingLeft="15" 
+									  width="100%" height="100%" text="SOME TEXT"/>
+				
+			<s:HGroup width="100%">
+				<controls:ItemRendererButton id="copyToClipboardButton" 
+											 iconSource="assets/images/copy.png"
+											  label="Copy to clipboard" height="28" 
+											  width="100%">
+				</controls:ItemRendererButton>
+				<controls:ItemRendererButton id="openFileLocationButton" 
+											 label="Open file location"
+											 iconSource="assets/images/open_folder.png"
+											 height="28"
+											 width="100%">
+				</controls:ItemRendererButton>
+			</s:HGroup>
+			
+			<s:Label id="errorLabel" 
+					 text="You must grant this application assistive access. Open Preferences > Security and Privacy > Accessibility > Allow access"
+					 color="red"
+					 fontWeight="bold"
+					 width="100%"
+					 visible="false"
+					 textAlign="center"
+					 />
+		</s:Form>
+	
+	</controls:FrameContainer> 
+</s:WindowedApplication>
