@@ -48,7 +48,7 @@ Also available for <a href="http://www.velara3.com/wp/?p=268">Android</a>.
 * Save to image, plain text, HTML, SVG or FXG
 * Open in Illustrator and other vector software
 
+Download: https://github.com/velara3/products/raw/master/VeraType/VeraType_3.3.3.zip  
 More info: http://www.velara3.com/wp/2013/03/21/veratype-for-win-and-mac/  
-Download: https://github.com/monkeypunch3/products/raw/master/VeraType/VeraType_3.3.3.zip  
 
 tags: typography, art, text, photo, photos, editing, ascii art, bitmap, raster, filters, images, code, typographical case, font, fixed width, variable width, svg, fxg, illustrator
