@@ -1,10 +1,10 @@
 # Products
-These are products I have for sale or used to have for sale that are now free (donations accepted)
+These are products I have for sale or used to have for sale (donations and gift cards to coffee shops accepted)
 
 <h1>VeraType</h1>
-VeraType converts your images into text and your text into images. This app helps you create alternative art, typography, email messages, forum, code, pictures and more. Take your favorite photos and create new and exciting text and photo art.
+VeraType converts your images into text and your text into images. This app helps you create  art, typography, email messages, forum, code, pictures and more. Take your favorite photos and create new and exciting text and photo art.  
 
-Once they are in text you can email them in emails when you can’t attach an image. You can post them in forums with your signature. You can post them in instant chat messages. You can even type up your own message and shape it into any image. Anywhere that you can post text you can post text art images. You can also export them as images.
+Once they are in text you can email them in emails when you can’t attach an image. You can post them in forums with your signature. You can post them in instant chat messages. You can even type up your own message and shape it into any image. Anywhere that you can post text you can post text art images. You can also export them as images.  
 
 <strong>Tutorials</strong>  
 <a href="http://www.velara3.com/wp/?p=170">Part I - How to make great text art</a>  
@@ -54,7 +54,7 @@ tags: Photoshop, Photoshop script, iOS, iPhone, iPad, Android, AIR, mobile, desk
 
 
 <h1>Start Screensaver</h1>  
-Start screensaver for Mac launches the screensaver when you click on the application icon. WOW!?!
+Start screensaver for Mac launches the screensaver when you click on the application icon. WOW!?!  
 
 <strong>Features</strong>  
 * Easy to use?
@@ -66,7 +66,7 @@ tags: Mac, OSX, screensaver, login, logout, logoff
 
 
 <h1>Show Desktop</h1>  
-Show Desktop for Mac minimizes all the open windows and shows the desktop when you click on the application icon. WOW!?!
+Show Desktop for Mac minimizes all the open windows and shows the desktop when you click on the application icon. WOW!?!  
 
 <strong>Features</strong>  
 * Easy to use?
