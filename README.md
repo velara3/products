@@ -3,7 +3,7 @@ These are products I have for sale or used to have for sale that are now free (d
 
 <h1>Export Image to Multiple Sizes for Photoshop</h1>  
 <img style="float:right" src="https://i2.wp.com/www.velara3.com/wp/wp-content/uploads/2015/01/Screen-Shot-2015-01-31-at-6.08.29-PM.png" alt="Export to custom sizes" />Export to Multiple Sizes is a script for Photoshop to export your work to multiple sizes. When creating icons for mobile or desktop applications you must export your application icon to over twenty five different sizes. Now you can choose a target platform (or create your own sizes list) and export them all at once!
-  
+
 <strong>Features</strong>  
 * Easy to use
 * Export to iOS, Android and AIR or your own custom export group
@@ -17,7 +17,7 @@ These are products I have for sale or used to have for sale that are now free (d
 
 More info: http://www.velara3.com/wp/2015/01/22/export-to-multiple-sizes-for-photoshop/  
 Video: https://www.youtube.com/watch?v=_la4ErHBJ5o  
-Download: https://github.com/monkeypunch3/products/tree/master/ExportSizes
+Download: https://github.com/velara3/products/tree/master/ExportSizes
 
 tags: Photoshop, Photoshop script, iOS, iPhone, iPad, Android, AIR, mobile, desktop, app, Google Play, App Store, icon, image, bitmap, resize, export, save as, save for web
 
