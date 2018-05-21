@@ -32,8 +32,8 @@ More info: http://www.velara3.com/wp/2013/03/21/veratype-for-win-and-mac/
 
 tags: typography, art, text, photo, photos, editing, ascii art, bitmap, raster, filters, images, code, typographical case, font, fixed width, variable width, svg, fxg, illustrator
 
-<h1>Export Image to Multiple Sizes for Photoshop</h1>  
-<img style="float:right" src="https://i2.wp.com/www.velara3.com/wp/wp-content/uploads/2015/01/Screen-Shot-2015-01-31-at-6.08.29-PM.png" alt="Export to custom sizes" />Export to Multiple Sizes is a script for Photoshop to export your work to multiple sizes. When creating icons for mobile or desktop applications you must export your application icon to over twenty five different sizes. Now you can choose a target platform (or create your own sizes list) and export them all at once!
+<h1>Export Image to Multiple Sizes plugin extension for Photoshop</h1>  
+<img style="float:right" src="https://i2.wp.com/www.velara3.com/wp/wp-content/uploads/2015/01/Screen-Shot-2015-01-31-at-6.08.29-PM.png" alt="Export to custom sizes" />Export to Multiple Sizes is a script for Photoshop to export your work to multiple sizes. When creating icons for mobile or desktop applications you must export your application icon to over twenty five different sizes. Now you can choose a target platform (or create your own sizes list) and export them all at once!<br/><br/>
 
 <strong>Features</strong>  
 * Easy to use
