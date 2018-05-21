@@ -54,7 +54,7 @@ tags: Photoshop, Photoshop script, iOS, iPhone, iPad, Android, AIR, mobile, desk
 
 
 <h1>Start Screensaver</h1>  
-Start screensaver for Mac launches the screensaver when you click on the application icon. WOW!?!  
+Start screensaver for Mac launches the screensaver when you click on the application icon. WOW!?!<br/><br/>
 
 <strong>Features</strong>  
 * Easy to use?
@@ -66,7 +66,7 @@ tags: Mac, OSX, screensaver, login, logout, logoff
 
 
 <h1>Show Desktop</h1>  
-Show Desktop for Mac minimizes all the open windows and shows the desktop when you click on the application icon. WOW!?!  
+Show Desktop for Mac minimizes all the open windows and shows the desktop when you click on the application icon. WOW!?!<br/><br/>
 
 <strong>Features</strong>  
 * Easy to use?
