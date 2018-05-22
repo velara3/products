@@ -1,5 +1,5 @@
 # Products
-These are products I have for sale or used to have for sale. Donations and gift cards accepted (coffee shops, etc)
+These are products I have for sale or used to have for sale. Donations and gift cards accepted (coffee, etc)
 
 <h1>VeraType</h1>
 VeraType converts your images into text and your text into images. This app helps you create  art, typography, email messages, forum, code, pictures and more. Take your favorite photos and create new and exciting text and photo art.<br/><br/>
